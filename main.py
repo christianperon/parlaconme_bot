@@ -21,7 +21,20 @@ def cron():
 
     return "ok", 200
 
-FRASE_DEL_GIORNO = "“Non tutto ciò che pesa è sbagliato. A volte sta solo chiedendo spazio.”"
+from datetime import date
+
+FRASI = [
+    "Non tutto ciò che pesa è sbagliato. A volte sta solo chiedendo spazio.",
+    "Se oggi ti senti lento, non sei rotto: stai solo tornando a te.",
+    "Non devi dimostrare nulla. Devi respirare e continuare.",
+    "La pace non arriva quando finisce il rumore, ma quando smetti di inseguirlo.",
+    "Un passo piccolo oggi vale più di una promessa enorme domani.",
+]
+
+def frase_di_oggi() -> str:
+    # Rotazione semplice: una frase diversa ogni giorno, riparte quando finisce la lista
+    i = date.today().toordinal() % len(FRASI)
+    return FRASI[i]
 
 def send_message(chat_id: int, text: str) -> None:
     r = requests.post(
