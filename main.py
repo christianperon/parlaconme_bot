@@ -53,6 +53,37 @@ def webhook():
         print(traceback.format_exc())
         return "error", 500
 
+CRON_SECRET = os.getenv("CRON_SECRET", "").strip()
+
+# memoria semplice (per ora) dei chat_id che hanno scritto al bot
+KNOWN_CHATS = set()
+
+def remember_chat(chat_id: int) -> None:
+    if chat_id:
+        KNOWN_CHATS.add(int(chat_id))
+
+# --- dentro la tua webhook(), subito dopo aver letto chat_id ---
+# remember_chat(chat_id)
+
+@app.route("/cron", methods=["POST"])
+def cron_send_daily():
+    # protezione base
+    incoming = request.headers.get("X-CRON-SECRET", "").strip()
+    if not CRON_SECRET or incoming != CRON_SECRET:
+        return "forbidden", 403
+
+    if not KNOWN_CHATS:
+        return "no chats", 200
+
+    text = f"🌱 Frase del giorno\n{FRASE_DEL_GIORNO}"
+    for cid in list(KNOWN_CHATS):
+        try:
+            send_message(cid, text)
+        except Exception:
+            pass
+
+    return "sent", 200
+
 if __name__ == "__main__":
     port = int(os.getenv("PORT", "10000"))
     app.run(host="0.0.0.0", port=port)
