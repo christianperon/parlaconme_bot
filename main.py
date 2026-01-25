@@ -8,6 +8,15 @@ API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}"
 app = Flask(__name__)
 application = app
 
+CRON_SECRET = os.getenv("CRON_SECRET", "").strip()
+
+@app.route("/cron", methods=["GET", "POST"])
+def cron():
+    secret = (request.args.get("secret") or "").strip()
+    if not CRON_SECRET or secret != CRON_SECRET:
+        return "forbidden", 403
+    return "ok", 200
+
 FRASE_DEL_GIORNO = "“Non tutto ciò che pesa è sbagliato. A volte sta solo chiedendo spazio.”"
 
 def send_message(chat_id: int, text: str) -> None:
