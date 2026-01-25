@@ -20,7 +20,7 @@ application = app
 # DB (salva chat_id di chi fa /start)
 # Nota: su Render Free senza Disk la persistenza può resettarsi.
 # ======================
-DB_PATH = os.getenv("DB_PATH", "bot.db").strip()
+DB_PATH = os.getenv("DB_PATH", "/opt/render/project/src/bot.db").strip()
 
 def init_db():
     conn = sqlite3.connect(DB_PATH)
