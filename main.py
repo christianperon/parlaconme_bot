@@ -6,6 +6,7 @@ BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
 API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
 app = Flask(__name__)
+application = app
 
 FRASE_DEL_GIORNO = "“Non tutto ciò che pesa è sbagliato. A volte sta solo chiedendo spazio.”"
 
