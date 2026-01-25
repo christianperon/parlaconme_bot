@@ -1,14 +1,14 @@
-name: ParlaConMe Daily Message
+name: Daily message
 
 on:
   schedule:
-    - cron: '0 7 * * *'   # 07:00 UTC = 09:00 Italia
+    - cron: "0 7 * * *"   # ogni giorno alle 07:00 UTC (~09:00 Italia)
   workflow_dispatch:
 
 jobs:
-  call-cron:
+  send:
     runs-on: ubuntu-latest
     steps:
       - name: Call bot cron endpoint
         run: |
-          curl "https://parlaconme-bot.onrender.com/cron?secret=${{ secrets.CRON_SECRET }}"
+          curl -X GET "https://parlaconme-bot.onrender.com/cron?secret=${{ secrets.CRON_SECRET }}"
