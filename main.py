@@ -17,7 +17,7 @@ def cron():
 
     # TEST: manda un messaggio fisso a te
     TEST_CHAT_ID = 1222867929  # il tuo chat_id (dai log)
-    send_message(TEST_CHAT_ID, "🌅 Buongiorno. Questo è un test del messaggio giornaliero.")
+    send_message(TEST_CHAT_ID, f"🌅 Buongiorno.\n\n🌱 Frase del giorno\n{frase_di_oggi()}")
 
     return "ok", 200
 
@@ -65,13 +65,9 @@ def webhook():
             return "ok", 200
             remember_chat(chat_id)
 
-        if text == "/start":
-            reply = (
-                "🌱 Frase del giorno\n"
-                f"{FRASE_DEL_GIORNO}\n\n"
-                "ParlaConMe è qui. Torna quando vuoi."
-            )
-            send_message(chat_id, reply)
+       if text == "/start":
+    reply = f"🌱 Frase del giorno\n{frase_di_oggi()}\n\nParlaConMe è qui. Torna quando vuoi."
+    send_message(chat_id, reply)
 
         return "ok", 200
 
