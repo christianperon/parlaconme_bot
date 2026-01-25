@@ -9,12 +9,16 @@ app = Flask(__name__)
 application = app
 
 CRON_SECRET = os.getenv("CRON_SECRET", "").strip()
-
 @app.route("/cron", methods=["GET", "POST"])
 def cron():
-    secret = (request.args.get("secret") or "").strip()
+    secret = (request.args.get("secret") or request.headers.get("X-Cron-Secret") or "").strip()
     if not CRON_SECRET or secret != CRON_SECRET:
         return "forbidden", 403
+
+    # TEST: manda un messaggio fisso a te
+    TEST_CHAT_ID = 1222867929  # il tuo chat_id (dai log)
+    send_message(TEST_CHAT_ID, "🌅 Buongiorno. Questo è un test del messaggio giornaliero.")
+
     return "ok", 200
 
 FRASE_DEL_GIORNO = "“Non tutto ciò che pesa è sbagliato. A volte sta solo chiedendo spazio.”"
