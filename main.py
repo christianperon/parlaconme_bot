@@ -25,24 +25,34 @@ def send_message(chat_id: int, text: str) -> None:
 def healthcheck():
     return "OK", 200
 
+import traceback  # <-- aggiungi questo import in alto insieme agli altri
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
     try:
         update = request.get_json(force=True) or {}
-        print("UPDATE:", update)
 
         message = update.get("message") or update.get("edited_message") or {}
-        chat_id = (message.get("chat") or {}).get("id")
+        chat = message.get("chat") or {}
+        chat_id = chat.get("id")
         text = (message.get("text") or "").strip()
 
-        if chat_id and text == "/start":
-            send_message(chat_id, "✅ Bot vivo. /start ricevuto.")
+        if not chat_id:
+            return "ok", 200
+
+        if text == "/start":
+            reply = (
+                "🌱 Frase del giorno\n"
+                f"{FRASE_DEL_GIORNO}\n\n"
+                "ParlaConMe è qui. Torna quando vuoi."
+            )
+            send_message(chat_id, reply)
 
         return "ok", 200
 
     except Exception as e:
-        print("WEBHOOK_ERROR:", e)
+        print("WEBHOOK_ERROR:", repr(e))
+        print(traceback.format_exc())
         return "error", 500
 
 if __name__ == "__main__":
