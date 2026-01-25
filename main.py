@@ -20,7 +20,7 @@ def send_message(chat_id: int, text: str) -> None:
 def healthcheck():
     return "OK", 200
 
-@app.post("/webhook")
+@app.route("/webhook", methods=["POST"])
 def webhook():
     if not BOT_TOKEN:
         return "BOT_TOKEN missing", 500
