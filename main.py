@@ -28,32 +28,23 @@ def healthcheck():
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    if not BOT_TOKEN:
-        return "BOT_TOKEN missing", 500
+    try:
+        update = request.get_json(force=True) or {}
+        print("UPDATE:", update)
 
-    # Parsing robusto: se Telegram manda JSON, questo lo legge sempre
-    update = request.get_json(force=True) or {}
+        message = update.get("message") or update.get("edited_message") or {}
+        chat_id = (message.get("chat") or {}).get("id")
+        text = (message.get("text") or "").strip()
 
-    message = update.get("message") or update.get("edited_message") or {}
-    chat = message.get("chat") or {}
-    chat_id = chat.get("id")
-    text = (message.get("text") or "").strip()
+        if chat_id and text == "/start":
+            send_message(chat_id, "✅ Bot vivo. /start ricevuto.")
 
-    if not chat_id:
         return "ok", 200
 
-    if text == "/start":
-        reply = (
-            "🌱 Frase del giorno\n"
-            f"{FRASE_DEL_GIORNO}\n\n"
-            "ParlaConMe è qui. Torna quando vuoi."
-        )
-        send_message(chat_id, reply)
-
-    return "ok", 200
-
+    except Exception as e:
+        print("WEBHOOK_ERROR:", e)
+        return "error", 500
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", "10000"))
     app.run(host="0.0.0.0", port=port)
-
