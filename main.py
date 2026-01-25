@@ -137,10 +137,8 @@ def webhook():
         return "no chat", 200
 
     if text == "/start":
-        reply = (
-            "🌱 Frase del giorno\n\n"
-            f"{FRASE_DEL_GIORNO}\n\n"
-            "ParlaConMe è qui. Torna quando vuoi."
+        reply = f"🌱 Frase del giorno\n{frase_del_giorno()}\n\nParlaConMe è qui. Torna quando vuoi."
+
         )
         send_message(chat_id, reply)
 
