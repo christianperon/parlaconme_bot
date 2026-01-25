@@ -69,9 +69,10 @@ def remember_chat(chat_id: int) -> None:
 @app.route("/cron", methods=["POST"])
 def cron_send_daily():
     # protezione base
-    incoming = request.headers.get("X-CRON-SECRET", "").strip()
+    incoming = request.args.get("secret", "").strip()
     if not CRON_SECRET or incoming != CRON_SECRET:
         return "forbidden", 403
+
 
     if not KNOWN_CHATS:
         return "no chats", 200
