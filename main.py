@@ -10,16 +10,14 @@ application = app
 
 FRASE_DEL_GIORNO = "“Non tutto ciò che pesa è sbagliato. A volte sta solo chiedendo spazio.”"
 
-
 def send_message(chat_id: int, text: str) -> None:
-    if not BOT_TOKEN:
-        return
-    requests.post(
+    r = requests.post(
         f"{API_URL}/sendMessage",
         json={"chat_id": chat_id, "text": text},
         timeout=15,
     )
-
+    print("SENDMESSAGE_STATUS:", r.status_code)
+    print("SENDMESSAGE_BODY:", r.text)
 
 @app.get("/")
 def healthcheck():
