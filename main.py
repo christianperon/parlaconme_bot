@@ -37,6 +37,7 @@ def webhook():
 
         if not chat_id:
             return "ok", 200
+            remember_chat(chat_id)
 
         if text == "/start":
             reply = (
