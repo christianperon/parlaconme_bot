@@ -26,7 +26,10 @@ def webhook():
     if not BOT_TOKEN:
         return "BOT_TOKEN missing", 500
 
-    update = request.get_json(silent=True) or {}
+   update = request.get_json(force=True)
+if not update:
+    return "ok", 200
+
     message = update.get("message") or update.get("edited_message") or {}
     chat = message.get("chat") or {}
     chat_id = chat.get("id")
