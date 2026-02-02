@@ -109,9 +109,9 @@ def chatgpt_reply(user_text: str) -> str:
         txt = (response.output_text or "").strip()
         return txt if txt else "Dimmi meglio cosa intendi."
 
-    except Exception:
-        logger.exception("Errore ChatGPT")
-        return "Ho avuto un attimo di vuoto. Me lo riscrivi in modo più semplice?"
+    except Exception as e:
+    logger.exception(f"Errore ChatGPT: {type(e).__name__} - {e}")
+    return "Ho avuto un attimo di vuoto. Me lo riscrivi in modo più semplice?"
 
 # -----------------------------
 # HEALTH
